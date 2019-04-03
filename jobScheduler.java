@@ -23,16 +23,16 @@ public class jobScheduler
  
             String messageString = "HELO";
  
-            String sendMessage = messageString + "\n";
+            String sendMessage = messageString;
             bufferedWriter.write(sendMessage);
             bufferedWriter.flush();
             System.out.println("Message sent to the server : "+sendMessage);
  
             //Get the return message from the server
-            InputStream is = socket.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            String message = br.readLine();
+            InputStream inputStream = socket.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String message = bufferedReader.readLine();
             System.out.println("Message received from the server : " +message);
         }
         catch (Exception exception)
