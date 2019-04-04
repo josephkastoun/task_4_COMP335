@@ -1,6 +1,6 @@
-package SubClasses;
-
 public class Job {
+
+    //TODO: Edit this class to fit actual structure, this one is wrong.
 
     public String type;
     public int minRunTime, maxRunTime, populationRate;
@@ -10,6 +10,10 @@ public class Job {
         this.minRunTime = minRunTime;
         this.maxRunTime = maxRunTime;
         this.populationRate = populationRate;
+    }
+
+    public Job(String inputString){
+
     }
 
     @Override
