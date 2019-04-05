@@ -23,57 +23,67 @@ public class jobScheduler
 			socket = new Socket(address, port);
 			servers = new ArrayList<>();
 			jobs = new ArrayList<>();
+			Boolean newReq = true;
 
 			sendMessage("HELO\n");
-
 			recieveMessage();
 
 			sendMessage("AUTH comp335\n");
+			recieveMessage();			
 
+			sendMessage("REDY\n");
 			recieveMessage();
 
+			//			sendMessage("RESC All\n");
+			//			recieveMessage();
+			//
+			//			sendMessage("OK\n");
+			//			recieveMessage();
+
+
 			while (true) {
+
+				if(newReq) {
+					reqAll();
+					newReq = false;
+				} else {
+
+					sendMessage("OK\n");
+					String r = recieveMessage();
+
+					if(r.equals(".")){                     
+						break;
+					}
+
+					Server s = new Server(r);
+					System.out.println(s.toString());
+					servers.add(s);
+				}
+			}
+
+			while (true) {
+				//System.out.println(servers);
+
 				sendMessage("REDY\n");
 				String r = recieveMessage();
-				System.out.println(r);
-				
+				//				System.out.println(r);
+
 				if(r.equals("NONE")) {
 					break;
 				}
-				
+
 				Job j = new Job(r);
-				System.out.println(j.toString());
+				//				System.out.println(j.toString());
 				jobs.add(j);
-				
-//				System.out.println(j.jobID);
-				
-				sendMessage("SCHD " + j.jobID + " " + "4xlarge " + "0\n");
+
+				//				System.out.println(j.jobID);
+
+				//instead of 4xlarge use getLargestServer
+				sendMessage("SCHD " + j.jobID + " " + getLargestServer(servers) + "0\n");
 				recieveMessage();
 
 			}
-			
-			
-			sendMessage("RESC All\n");
 
-			recieveMessage();
-
-//			sendMessage("OK\n");
-//			recieveMessage();
-			
-
-			while (true) {
-				sendMessage("OK\n");
-				String r = recieveMessage();
-
-				if(r.equals(".")){                     
-					break;
-				}
-				
-				Server s = new Server(r);
-				System.out.println(s.toString());
-				servers.add(s);
-			}
-			
 			sendMessage("OK");
 			recieveMessage();
 
@@ -114,5 +124,20 @@ public class jobScheduler
 		System.out.println("Message received from the server : " +message);
 
 		return message;
+	}
+
+	static void reqAll()  throws IOException{
+		sendMessage("RESC All\n");
+		recieveMessage();
+	}
+
+	static String getLargestServer(ArrayList<Server> sList) {
+
+		//Largest server type is last in list
+			int i = servers.size() - 1;
+		//Add space to return string so the server can read it
+			String returnStr = sList.get(i).type +" ";
+			return returnStr;
+
 	}
 }
