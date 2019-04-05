@@ -25,14 +25,19 @@ public class jobScheduler
 			jobs = new ArrayList<>();
 			Boolean newReq = true;
 
-			sendMessage("HELO\n");
-			recieveMessage();
-
-			sendMessage("AUTH comp335\n");
-			recieveMessage();			
-
-			sendMessage("REDY\n");
-			recieveMessage();
+			//Initial Setup
+			
+				//Send message to connect to server
+				sendMessage("HELO\n");
+				recieveMessage();
+	
+				//Send authentication message to server
+				sendMessage("AUTH comp335\n");
+				recieveMessage();			
+	
+				//Send ready message to start receiving job and server info
+				sendMessage("REDY\n");
+				recieveMessage();
 
 
 			while (true) {
@@ -60,23 +65,25 @@ public class jobScheduler
 
 			while (true) {
 
+				//Send message to receive job info
 				sendMessage("REDY\n");
 				String r = recieveMessage();
 
+				//If server responds with NONE (i.e there are no more jobs) break
 				if(r.equals("NONE")) {
 					break;
 				}
-
+				
+				//Create a new job item with info given from server and add it to jobs arraylist
 				Job j = new Job(r);
 				jobs.add(j);
 
+				//Send a scheduling message to the server with the most recent jobID to the largest given server
 				sendMessage("SCHD " + j.jobID + " " + getLargestServer(servers) + "0\n");
 				recieveMessage();
-
 			}
 
-//			sendMessage("OK\n");
-//			recieveMessage();
+
 
 		}
 		catch (Exception exception)
@@ -104,7 +111,7 @@ public class jobScheduler
 		//Get output stream for sending data
 		OutputStream outputStream = socket.getOutputStream();
 		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-		//Use a buffered writer so we dont have to send byte by byte
+		//Use a buffered writer so we don't have to send byte by byte
 		BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 		//Write the message
 		bufferedWriter.write(message);
