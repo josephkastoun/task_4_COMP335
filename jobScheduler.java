@@ -34,12 +34,6 @@ public class jobScheduler
 			sendMessage("REDY\n");
 			recieveMessage();
 
-			//			sendMessage("RESC All\n");
-			//			recieveMessage();
-			//
-			//			sendMessage("OK\n");
-			//			recieveMessage();
-
 
 			while (true) {
 
@@ -62,30 +56,24 @@ public class jobScheduler
 			}
 
 			while (true) {
-				//System.out.println(servers);
 
 				sendMessage("REDY\n");
 				String r = recieveMessage();
-				//				System.out.println(r);
 
 				if(r.equals("NONE")) {
 					break;
 				}
 
 				Job j = new Job(r);
-				//				System.out.println(j.toString());
 				jobs.add(j);
 
-				//				System.out.println(j.jobID);
-
-				//instead of 4xlarge use getLargestServer
 				sendMessage("SCHD " + j.jobID + " " + getLargestServer(servers) + "0\n");
 				recieveMessage();
 
 			}
 
-			sendMessage("OK");
-			recieveMessage();
+//			sendMessage("OK\n");
+//			recieveMessage();
 
 		}
 		catch (Exception exception)
@@ -97,6 +85,8 @@ public class jobScheduler
 			//Closing the socket
 			try
 			{
+				sendMessage("QUIT\n");
+				recieveMessage();
 				socket.close();
 			}
 			catch(Exception e)
