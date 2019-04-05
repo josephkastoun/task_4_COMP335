@@ -1,7 +1,5 @@
 public class Job {
 
-    //TODO: Edit this class to fit actual structure, this one is wrong.
-
 	public String type;
     public int submitTime, jobID, estRunTime, numCPUCores, memory, disk;
 
@@ -15,8 +13,10 @@ public class Job {
     }
 
     public Job(String inputString){
+        //Split the Job into individual objects
         String[] subStrings = inputString.split(" ");
 
+        //Assign each element based on the substrings
         this.type = subStrings[0];
         this.submitTime = Integer.parseInt(subStrings[1]);
         this.jobID = Integer.parseInt(subStrings[2]);

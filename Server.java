@@ -16,8 +16,10 @@ public class Server {
     }
 
     public Server(String inputString){
+        //Split the server object into individual elements
         String[] subStrings = inputString.split(" ");
 
+        //Assign properties individually based on the substrings
         this.type = subStrings[0];
         this.id = Integer.parseInt(subStrings[1]);
         this.state = Integer.parseInt(subStrings[2]);
@@ -31,6 +33,7 @@ public class Server {
 
     @Override
     public String toString(){
+        //Output test
         return String.format("server: type=%s id=%d state=%d availableTime=%d coreCount=%d memory=%d disk=%d", type, id, state, availableTime, coreCount, memory, disk);
     }
 }
