@@ -1,7 +1,6 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class jobScheduler
 {
@@ -50,7 +49,6 @@ public class jobScheduler
 					}
 
 					Server s = new Server(r);
-					System.out.println(s.toString());
 					servers.add(s);
 				}
 			}
@@ -69,11 +67,8 @@ public class jobScheduler
 
 				sendMessage("SCHD " + j.jobID + " " + getLargestServer(servers) + "0\n");
 				recieveMessage();
-
 			}
 
-//			sendMessage("OK\n");
-//			recieveMessage();
 
 		}
 		catch (Exception exception)
