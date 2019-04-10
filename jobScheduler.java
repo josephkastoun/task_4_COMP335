@@ -9,8 +9,8 @@ public class jobScheduler
 	private static Socket socket;
 	private static ObjectOutputStream oos = null;
 	private static ObjectInputStream ois = null;
-	private static ArrayList<Server> servers;
-	private static ArrayList<Job> jobs;
+	private static ArrayList<Server> servers = null;
+	private static ArrayList<Job> jobs = null;
 
 
 	public static void main(String args[])
@@ -119,7 +119,7 @@ public class jobScheduler
 		bufferedWriter.flush();
 
 		//Print the server output
-		System.out.println("Message sent to the server : "+message);
+		//System.out.println("Message sent to the server : "+message);
 	}
 
 	static String recieveMessage() throws IOException {
@@ -130,7 +130,7 @@ public class jobScheduler
 		//Read the line from the buffered reader
 		String message = br.readLine();
 		//Output to console
-		System.out.println("Message received from the server : " +message);
+		//System.out.println("Message received from the server : " +message);
 
 		//Return the string for use within the program
 		return message;
@@ -142,12 +142,22 @@ public class jobScheduler
 	}
 
 	static String getLargestServer(ArrayList<Server> sList) {
+		
+		int curHighCoreCount = 0;
+		String largestServerType = "";
+		
+		//Find largest server server
+			for(int i = 0; i<servers.size(); i++) {
 
-		//Largest server type is last in list
-			int i = servers.size() - 1;
-		//Add space to return string so the server can read it
-			String returnStr = sList.get(i).type +" ";
-			return returnStr;
+				if (sList.get(i).coreCount > curHighCoreCount){
+					//System.out.println(sList.get(i).coreCount);
+					curHighCoreCount = sList.get(i).coreCount;
+					largestServerType = sList.get(i).type;
+					//System.out.println(largestServerType);
 
+				}
+			}
+			//Add space to return string so the server can read it
+			return largestServerType + " ";
 	}
 }
