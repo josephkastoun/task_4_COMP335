@@ -82,7 +82,6 @@ public class jobScheduler
 
 				//Send a scheduling message to the server with the most recent jobID to the largest given server
 				getLargestServer(servers).scheduleJob(j);
-				recieveMessage();
 			}
 
 
