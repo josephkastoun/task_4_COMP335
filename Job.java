@@ -24,9 +24,7 @@ public class Job {
         this.numCPUCores = Integer.parseInt(subStrings[4]);
         this.memory = Integer.parseInt(subStrings[5]);
         this.disk = Integer.parseInt(subStrings[6]);
-
     }
-
 
 
     @Override

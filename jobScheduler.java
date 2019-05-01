@@ -9,9 +9,9 @@ public class jobScheduler
 	private static Socket socket;
 	private static ObjectOutputStream oos = null;
 	private static ObjectInputStream ois = null;
-	private static ArrayList<Server> servers = null;
 	private static ArrayList<Job> jobs = null;
 	public static long startTime = 0;
+	public static Servers Servers;
 
 
 	public static void main(String args[])
@@ -22,7 +22,6 @@ public class jobScheduler
 			int port = 8096;
 			InetAddress address = InetAddress.getByName(host);
 			socket = new Socket(address, port);
-			servers = new ArrayList<>();
 			jobs = new ArrayList<>();
 			Boolean newReq = true;
 
@@ -41,6 +40,7 @@ public class jobScheduler
 				recieveMessage();
 				startTime = System.currentTimeMillis();
 
+				Servers = new Servers(new ArrayList<Server>());
 
 			while (true) {
 				//Check if we've requested the servers before
@@ -61,7 +61,7 @@ public class jobScheduler
 					//Init server Object
 					Server s = new Server(r);
 					//Add server object to List
-					servers.add(s);
+					Servers.addServer(s);
 				}
 			}
 
@@ -81,7 +81,7 @@ public class jobScheduler
 				jobs.add(j);
 
 				//Send a scheduling message to the server with the most recent jobID to the largest given server
-				getLargestServer(servers).scheduleJob(j);
+				getLargestServer(Servers.getServers()).scheduleJob(j);
 			}
 
 
@@ -148,7 +148,7 @@ public class jobScheduler
 		Server largestServer = null;
 		
 		//Find largest server server
-			for(int i = 0; i<servers.size(); i++) {
+			for(int i = 0; i<Servers.getServers().size(); i++) {
 
 				if (sList.get(i).coreCount > curHighCoreCount){
 					//System.out.println(sList.get(i).coreCount);
