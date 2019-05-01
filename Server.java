@@ -1,9 +1,12 @@
+import java.io.IOException;
+
 public class Server {
 
 
 
     public String type;
     public int id, state, availableTime, coreCount, memory, disk;
+    public long completionTime;
 
     public Server(String type,int id, int state, int availableTime, int coreCount, int memory, int disk){
         this.type = type;
@@ -29,7 +32,16 @@ public class Server {
         this.disk = Integer.parseInt(subStrings[5]);
     }
     
+    public boolean isAvailable(){
+        return completionTime <= System.currentTimeMillis();
+    }
 
+    public String scheduleJob(Job j) throws IOException {
+        jobScheduler.sendMessage("SCHD " + j.jobID + " " + this.type + " " + this.id + " \n");
+        String s = jobScheduler.recieveMessage();
+        this.completionTime = System.currentTimeMillis() + (j.estRunTime * 1000);
+        return s;
+    }
 
     @Override
     public String toString(){

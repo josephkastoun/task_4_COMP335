@@ -11,6 +11,7 @@ public class jobScheduler
 	private static ObjectInputStream ois = null;
 	private static ArrayList<Server> servers = null;
 	private static ArrayList<Job> jobs = null;
+	public static long startTime = 0;
 
 
 	public static void main(String args[])
@@ -38,6 +39,7 @@ public class jobScheduler
 				//Send ready message to start receiving job and server info
 				sendMessage("REDY\n");
 				recieveMessage();
+				startTime = System.currentTimeMillis();
 
 
 			while (true) {
@@ -79,7 +81,7 @@ public class jobScheduler
 				jobs.add(j);
 
 				//Send a scheduling message to the server with the most recent jobID to the largest given server
-				sendMessage("SCHD " + j.jobID + " " + getLargestServer(servers) + "0\n");
+				getLargestServer(servers).scheduleJob(j);
 				recieveMessage();
 			}
 
@@ -141,10 +143,10 @@ public class jobScheduler
 		recieveMessage();
 	}
 
-	static String getLargestServer(ArrayList<Server> sList) {
+	static Server getLargestServer(ArrayList<Server> sList) {
 		
 		int curHighCoreCount = 0;
-		String largestServerType = "";
+		Server largestServer = null;
 		
 		//Find largest server server
 			for(int i = 0; i<servers.size(); i++) {
@@ -152,12 +154,12 @@ public class jobScheduler
 				if (sList.get(i).coreCount > curHighCoreCount){
 					//System.out.println(sList.get(i).coreCount);
 					curHighCoreCount = sList.get(i).coreCount;
-					largestServerType = sList.get(i).type;
+					largestServer = sList.get(i);
 					//System.out.println(largestServerType);
 
 				}
 			}
 			//Add space to return string so the server can read it
-			return largestServerType + " ";
+			return largestServer;
 	}
 }

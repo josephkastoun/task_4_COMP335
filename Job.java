@@ -27,6 +27,8 @@ public class Job {
 
     }
 
+
+
     @Override
     public String toString(){
         return String.format("node: job attr: type=\"%s\" attr: submitTime=\"%d\" attr: jobID=\"%d\" attr: estRunTime=\"%d\" attr: numCPUCores=\"%d\" attr: memory=\"%d\" attr disk=\"%d\"",
