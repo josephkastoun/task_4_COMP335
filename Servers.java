@@ -1,5 +1,12 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Iterator;
+
+
 
 public class Servers {
 
@@ -27,10 +34,38 @@ public class Servers {
     }
 
     //TODO: James' Implementation
-    public Server worstFit(Job j){
+    public Server worstFit(Job job) throws IOException{
+    		
+    	int worstFit = Integer.MIN_VALUE;
+    	int altFit = Integer.MIN_VALUE;    	
+    	String serverType;
 
+    	
+    	// Create TreeMap of servers for <Core Count, Type>
+    	Map<Integer, String> serverInfo = new HashMap<>();
+    	// Add each unique server type (in order from server)
+    	for(Server s : servers) {
+    		serverInfo.putIfAbsent(s.coreCount, s.type);
+    	}
+    	
+    	Set set = serverInfo.entrySet();
+    	Iterator iterator = set.iterator();
+    	
+    	serverInfo.size();
+    	// for(int i=0; i<serverInfo.size(); i++)
+    	
+    	// For each server type
+    	while(iterator.hasNext()) {
+    		Map.Entry currentEntry = (Map.Entry)iterator.next();
+    		serverType = (String) currentEntry.getValue();
+//			jobScheduler.sendMessage("RESC" + serverType);
+    	}
+    	
+    	
+    	
+    	
+		return null;    	
 
-        return null;
     }
 
     //TODO: Sophie's Implementation
