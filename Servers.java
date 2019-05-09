@@ -32,37 +32,48 @@ public class Servers {
 
         return null;
     }
+    
+    
 
     //TODO: James' Implementation
     public Server worstFit(Job job) throws IOException{
     		
     	int worstFit = Integer.MIN_VALUE;
-    	int altFit = Integer.MIN_VALUE;    	
-    	String serverType;
+    	int altFit = Integer.MIN_VALUE;  
+    	int tempCount;
+    	int fitVal;
 
     	
-    	// Create TreeMap of servers for <Core Count, Type>
-    	Map<Integer, String> serverInfo = new HashMap<>();
-    	// Add each unique server type (in order from server)
+    	// Create HashMap of servers for <Type, Core Count>
+    	Map<String, Integer> serverInfo = new HashMap<>(); 
+    	// Create HashMap of servers for <Type, Server Count>
+    	Map<String, Integer> serverCount = new HashMap<>();
+    	
+    	// If first instance of server type, add to serverInfo map
     	for(Server s : servers) {
-    		serverInfo.putIfAbsent(s.coreCount, s.type);
-    	}
-    	
-    	Set set = serverInfo.entrySet();
-    	Iterator iterator = set.iterator();
-    	
-    	serverInfo.size();
-    	// for(int i=0; i<serverInfo.size(); i++)
-    	
-    	// For each server type
-    	while(iterator.hasNext()) {
-    		Map.Entry currentEntry = (Map.Entry)iterator.next();
-    		serverType = (String) currentEntry.getValue();
-//			jobScheduler.sendMessage("RESC" + serverType);
-    	}
-    	
-    	
-    	
+    		if(!serverInfo.containsKey(s.type)) {
+    			serverInfo.put(s.type, s.coreCount);
+    			serverCount.put(s.type, 1);
+    	// If server already in serverInfo, increment count
+    		} else {
+    			tempCount = serverCount.get(s.type);
+    			serverCount.put(s.type, tempCount);
+    		}
+    		
+    		
+    		
+    		//resc server info
+    		//Job job = new Job();
+    		
+    		for(int i=0; i<serverTypes; i++) {
+    			for(int j=0; j<serverTypeCount; i++) {
+    				if(job.numCPUCores <= serverVorVount) {
+    						fitVal = job.numCPUCores - serverCoreCount;
+    						
+    				}
+    			}
+    		}
+    	}	
     	
 		return null;    	
 

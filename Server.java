@@ -29,7 +29,7 @@ public class Server {
         this.availableTime = Integer.parseInt(subStrings[3]);
         this.coreCount = Integer.parseInt(subStrings[4]);
         this.memory = Integer.parseInt(subStrings[5]);
-        this.disk = Integer.parseInt(subStrings[5]);
+        this.disk = Integer.parseInt(subStrings[6]);
     }
     
     public boolean isAvailable(){
