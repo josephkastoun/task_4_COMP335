@@ -8,7 +8,9 @@ import java.util.Iterator;
 
 
 
+
 public class Servers {
+
 
     public Servers(ArrayList<Server> s){
         this.servers = s;
@@ -20,17 +22,61 @@ public class Servers {
         return servers;
     }
 
+    public ArrayList<Server> getServersByType(Server.serverType s){
+    	ArrayList<Server> sL = new ArrayList<>();
+
+    	getServers().forEach(k -> {
+    		if(k.sType == s){
+    			sL.add(k);
+			}
+		});
+
+    	return sL;
+	}
 
     public void addServer(Server s){
         servers.add(s);
     }
 
 
-    //TODO: Joseph's Implementation
     public Server bestFit(Job j){
+		int bestFit = Integer.MAX_VALUE;
+		int minAvail = Integer.MAX_VALUE;
+		Server bfServer = null;
 
+		for(Server.serverType sT : Server.serverType.values()){
 
-        return null;
+			for(Server server : getServersByType(sT)){
+				if(server.coreCount >= j.numCPUCores && server.isAvailable()){
+					int fitness = server.fitness(j);
+					if(fitness < bestFit && server.availableTime < minAvail){
+						bestFit = fitness;
+						minAvail = server.availableTime;
+						bfServer = server;
+					}
+				}
+			}
+		}
+
+		if(bfServer != null){
+			return bfServer;
+		}else{
+			for(Server.serverType sT : Server.serverType.values()){
+
+				for(Server server : getServersByType(sT)){
+					if(server.coreCount >= j.numCPUCores){
+						int fitness = server.fitness(j);
+						if(fitness < bestFit && server.availableTime < minAvail){
+							bestFit = fitness;
+							minAvail = server.availableTime;
+							bfServer = server;
+						}
+					}
+				}
+			}
+		}
+
+        return bfServer;
     }
     
     
@@ -61,7 +107,7 @@ public class Servers {
     		}
     		
     		
-    		
+    		/*
     		//resc server info
     		//Job job = new Job();
     		
@@ -73,6 +119,8 @@ public class Servers {
     				}
     			}
     		}
+
+    		 */
     	}	
     	
 		return null;    	
@@ -85,4 +133,24 @@ public class Servers {
 
         return null;
     }
+
+	public Server getLargestServer() {
+
+		int curHighCoreCount = 0;
+		Server largestServer = null;
+
+		//Find largest server server
+		for(int i = 0; i<getServers().size(); i++) {
+
+			if (getServers().get(i).coreCount > curHighCoreCount){
+				//System.out.println(sList.get(i).coreCount);
+				curHighCoreCount = getServers().get(i).coreCount;
+				largestServer = getServers().get(i);
+				//System.out.println(largestServerType);
+
+			}
+		}
+		//Add space to return string so the server can read it
+		return largestServer;
+	}
 }

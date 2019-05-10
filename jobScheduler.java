@@ -24,6 +24,7 @@ public class jobScheduler
 			socket = new Socket(address, port);
 			jobs = new ArrayList<>();
 			Boolean newReq = true;
+			System.out.println(args[0] + "  " + args[1]);
 
 			//Initial Setup
 			
@@ -66,7 +67,6 @@ public class jobScheduler
 			}
 
 			while (true) {
-
 				//Send message to receive job info
 				sendMessage("REDY\n");
 				String r = recieveMessage();
@@ -81,7 +81,21 @@ public class jobScheduler
 				jobs.add(j);
 
 				//Send a scheduling message to the server with the most recent jobID to the largest given server
-				getLargestServer(Servers.getServers()).scheduleJob(j);
+				if(args[0] != null && args[0] == "-a"){
+					switch (args[1]){
+						case "ff":
+							Servers.firstFit(j).scheduleJob(j);
+							break;
+						case "bf":
+							Servers.bestFit(j).scheduleJob(j);
+							break;
+						case "wf":
+							Servers.worstFit(j).scheduleJob(j);
+							break;
+					}
+				}else{
+					Servers.getLargestServer().scheduleJob(j);
+				}
 			}
 
 
@@ -142,23 +156,4 @@ public class jobScheduler
 		recieveMessage();
 	}
 
-	static Server getLargestServer(ArrayList<Server> sList) {
-		
-		int curHighCoreCount = 0;
-		Server largestServer = null;
-		
-		//Find largest server server
-			for(int i = 0; i<Servers.getServers().size(); i++) {
-
-				if (sList.get(i).coreCount > curHighCoreCount){
-					//System.out.println(sList.get(i).coreCount);
-					curHighCoreCount = sList.get(i).coreCount;
-					largestServer = sList.get(i);
-					//System.out.println(largestServerType);
-
-				}
-			}
-			//Add space to return string so the server can read it
-			return largestServer;
-	}
 }
