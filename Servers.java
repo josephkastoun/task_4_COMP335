@@ -148,7 +148,8 @@ public class Servers {
 				}
 			}
 		}
-		return s.get(0);
+		// Update to return first active server.
+		return byType.get(0).getKey();
 	}
 
 	public ArrayList<Map.Entry<Server, Integer>> countServersByType() {
