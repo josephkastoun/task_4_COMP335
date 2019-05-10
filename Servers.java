@@ -1,50 +1,37 @@
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
-
-
-
 
 public class Servers {
 
 
-    public Servers(ArrayList<Server> s){
-        this.servers = s;
-    }
-
-    private ArrayList<Server> servers = new ArrayList<>();
-
-    public ArrayList<Server> getServers() {
-        return servers;
-    }
-
-    public ArrayList<Server> getServersByType(Server.serverType s){
-    	ArrayList<Server> sL = new ArrayList<>();
-
-    	getServers().forEach(k -> {
-    		if(k.sType == s){
-    			sL.add(k);
-			}
-		});
-
-    	return sL;
+	public Servers(ArrayList<Server> s){
+		this.servers = s;
+		serverTypes = new ArrayList<>();
 	}
 
-    public void addServer(Server s){
-        servers.add(s);
-    }
+	private ArrayList<Server> servers;
+
+	public ArrayList<Server> getServers() {
+		return servers;
+	}
+
+	public void addServer(Server s){
+		servers.add(s);
+	}
+
+	public ArrayList<String> serverTypes;
 
 
-    public Server bestFit(Job j){
+	public Server bestFit(Job j){
 		int bestFit = Integer.MAX_VALUE;
 		int minAvail = Integer.MAX_VALUE;
 		Server bfServer = null;
 
-		for(Server.serverType sT : Server.serverType.values()){
+		for(String sT : serverTypes){
 
 			for(Server server : getServersByType(sT)){
 				if(server.coreCount >= j.numCPUCores && server.isAvailable()){
@@ -61,7 +48,7 @@ public class Servers {
 		if(bfServer != null){
 			return bfServer;
 		}else{
-			for(Server.serverType sT : Server.serverType.values()){
+			for(String sT : serverTypes){
 
 				for(Server server : getServersByType(sT)){
 					if(server.coreCount >= j.numCPUCores){
@@ -76,63 +63,124 @@ public class Servers {
 			}
 		}
 
-        return bfServer;
-    }
-    
-    
+		return bfServer;
+	}
 
-    //TODO: James' Implementation
-    public Server worstFit(Job job) throws IOException{
-    		
-    	int worstFit = Integer.MIN_VALUE;
-    	int altFit = Integer.MIN_VALUE;  
-    	int tempCount;
-    	int fitVal;
+	//TODO: James' Implementation
+	public Server worstFit(Job job){
 
-    	
-    	// Create HashMap of servers for <Type, Core Count>
-    	Map<String, Integer> serverInfo = new HashMap<>(); 
-    	// Create HashMap of servers for <Type, Server Count>
-    	Map<String, Integer> serverCount = new HashMap<>();
-    	
-    	// If first instance of server type, add to serverInfo map
-    	for(Server s : servers) {
-    		if(!serverInfo.containsKey(s.type)) {
-    			serverInfo.put(s.type, s.coreCount);
-    			serverCount.put(s.type, 1);
-    	// If server already in serverInfo, increment count
-    		} else {
-    			tempCount = serverCount.get(s.type);
-    			serverCount.put(s.type, tempCount);
-    		}
-    		
-    		
-    		/*
-    		//resc server info
-    		//Job job = new Job();
-    		
-    		for(int i=0; i<serverTypes; i++) {
-    			for(int j=0; j<serverTypeCount; i++) {
-    				if(job.numCPUCores <= serverVorVount) {
-    						fitVal = job.numCPUCores - serverCoreCount;
-    						
-    				}
-    			}
-    		}
+		int worstFit = Integer.MIN_VALUE;
+		int altFit = Integer.MIN_VALUE;  
 
-    		 */
-    	}	
-    	
-		return null;    	
-
-    }
-
-    //TODO: Sophie's Implementation
-    public Server firstFit(Job j){
+		Server worstFitServer = null;
+		Server altFitServer = null;
 
 
-        return null;
-    }
+		for(String sT : serverTypes) {
+			for(Server server :  getServersByType(sT)) {
+				
+				if(server.coreCount >= job.numCPUCores && server.isAvailable()) {
+					int fitVal = server.fitness(job);
+
+					if(fitVal > worstFit && server.isImmediatelyAvailable()) { //Immediately avail
+						worstFit = fitVal;
+						worstFitServer = server;
+						
+						//ADD Short definite amount of time instead of 1 V
+					} else if (fitVal > altFit && server.availableTime < 1) {
+						altFit = fitVal;
+						altFitServer = server;
+					}
+				}
+			}
+		}
+		
+		if (worstFitServer != null) {
+			return worstFitServer;
+			
+		} else if (altFitServer != null) {
+			return altFitServer;
+			
+		} else {
+			for(String sT : serverTypes) {
+				for(Server server : getServersByType(sT)) {
+					
+					if(server.coreCount >= job.numCPUCores) {
+						int fitVal = server.fitness(job);
+						if(fitVal > worstFit && server.isImmediatelyAvailable()) {
+							worstFit = fitVal;
+							worstFitServer = server;
+						}
+					}
+				}
+			}
+		}
+		return worstFitServer;    	
+
+	}
+
+	public Server firstFit(Job job){
+		ArrayList<Map.Entry<Server, Integer>> byType = countServersByType();
+		ArrayList<Server> s;
+
+		// loop through server types (smallest to largest)
+		for(int i = 0; i <byType.size(); i++) {
+			s = getServersByType(byType.get(i).getKey().type);
+			// Loop through amount of servers of each type.
+			for(int j =0; j<s.size(); j++) {
+				// if server has sufficient available resources to run job return the server
+				if(s.get(j).coreCount < job.numCPUCores)
+					return s.get(j);
+			}
+		}
+		// Return first active server with sufficient initial resource capacity to run job.
+		return null;
+	}
+
+	public ArrayList<Map.Entry<Server, Integer>> countServersByType() {
+		Map<Server, Integer> serverCount = new HashMap<>();
+
+		// Create HashMap which counts occurrences of each Server Type.
+		for(Server s : servers){
+			int count = 0;
+			if( serverCount.containsKey(s.type) ) {
+				count = serverCount.get(s.type);
+			}
+			serverCount.put(s, count+1);
+		}
+
+		// Sort into an ordered ArrayList by comparing Core counts.
+		Set<Map.Entry<Server, Integer>> entrySet = serverCount.entrySet();
+		ArrayList<Map.Entry<Server, Integer>> serverBySize = new ArrayList<Map.Entry<Server,Integer>>(entrySet);
+		bubbleSort(serverBySize);
+
+		return serverBySize;
+	}
+
+
+	public void bubbleSort(ArrayList<Map.Entry<Server, Integer>> list) {
+		for(int i=0; i<list.size(); i++) {
+			for(int k=0; k<list.size()-1-i; k++) {
+				Server s1 = list.get(k).getKey();
+				Server s2 = list.get(k+1).getKey();
+				if(s1.compareTo(s2) == 1) {
+					Map.Entry<Server, Integer> temp = list.get(k);
+					list.set(k, list.get(k+1));
+					list.set(k+1, temp);
+				}
+			}
+		}
+	}
+
+	public ArrayList<Server> getServersByType(String type){
+		ArrayList<Server> list = new ArrayList<>();
+		for(Server s: servers) {
+			if(s.type.equalsIgnoreCase(type)) {
+				list.add(s);
+			}
+		}
+		return list;
+	}
 
 	public Server getLargestServer() {
 

@@ -60,6 +60,13 @@ public class jobScheduler
 
 					//Init server Object
 					Server s = new Server(r);
+
+					//Add server type to List
+					if(!Servers.serverTypes.contains(s.type)){
+						Servers.serverTypes.add(s.type);
+						System.out.println(s.type);
+					}
+
 					//Add server object to List
 					Servers.addServer(s);
 				}
