@@ -42,7 +42,7 @@ public class Servers {
 		for(String sT : serverTypes){
 
 			for(Server server : getServersByType(sT)){
-				if(server.canRun(j) && server.isAvailable(0)){
+				if(server.coreCount >= j.numCPUCores) {
 					int fitness = server.fitness(j);
 					if(fitness < bestFit || fitness == bestFit && server.availableTime < minAvail){
 						bestFit = fitness;
