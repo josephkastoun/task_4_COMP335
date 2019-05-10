@@ -73,11 +73,11 @@ public class Servers {
 		return bfServer;
 	}
 
-	//TODO: James' Implementation
 	public Server worstFit(Job job){
 
 		int worstFit = Integer.MIN_VALUE;
 		int altFit = Integer.MIN_VALUE;  
+		int tempCoreCount = 0;
 
 		Server worstFitServer = null;
 		Server altFitServer = null;
@@ -86,15 +86,15 @@ public class Servers {
 		for(String sT : serverTypes) {
 			for(Server server :  getServersByType(sT)) {
 				
-				if(server.coreCount >= job.numCPUCores && server.isAvailable()) {
+				if(server.coreCount >= job.numCPUCores) {
 					int fitVal = server.fitness(job);
 
-					if(fitVal > worstFit && server.isImmediatelyAvailable()) { //Immediately avail
+					if(fitVal > worstFit && (server.state == 2)) { //Immediately avail
 						worstFit = fitVal;
 						worstFitServer = server;
 						
 						//ADD Short definite amount of time instead of 1 V
-					} else if (fitVal > altFit && server.availableTime < 1) {
+					} else if (fitVal > altFit && (server.state == 0 || server.state == 1)) {
 						altFit = fitVal;
 						altFitServer = server;
 					}
@@ -113,10 +113,11 @@ public class Servers {
 				for(Server server : getServersByType(sT)) {
 					
 					if(server.coreCount >= job.numCPUCores) {
-						int fitVal = server.fitness(job);
-						if(fitVal > worstFit && server.isImmediatelyAvailable()) {
-							worstFit = fitVal;
+						
+						//Find largest server
+						if(tempCoreCount < server.coreCount) {
 							worstFitServer = server;
+							tempCoreCount = server.coreCount;
 						}
 					}
 				}
