@@ -24,7 +24,6 @@ public class jobScheduler
 			socket = new Socket(address, port);
 			jobs = new ArrayList<>();
 			Boolean newReq = true;
-			System.out.println(args[0] + "  " + args[1]);
 
 			//Initial Setup
 			
@@ -81,7 +80,7 @@ public class jobScheduler
 				jobs.add(j);
 
 				//Send a scheduling message to the server with the most recent jobID to the largest given server
-				if(args[0] != null && args[0] == "-a"){
+				if(args[0].equals("-a")){
 					switch (args[1]){
 						case "ff":
 							Servers.firstFit(j).scheduleJob(j);
