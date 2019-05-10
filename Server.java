@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
 
@@ -18,6 +21,8 @@ public class Server {
         this.disk = disk;
     }
 
+    public ConcurrentHashMap<Long, Job> jobs;
+
     public Server(String inputString){
         //Split the server object into individual elements
         String[] subStrings = inputString.split(" ");
@@ -30,7 +35,7 @@ public class Server {
         this.coreCount = Integer.parseInt(subStrings[4]);
         this.memory = Integer.parseInt(subStrings[5]);
         this.disk = Integer.parseInt(subStrings[6]);
-
+        jobs = new ConcurrentHashMap<>();
     }
 
     public int fitness(Job j){
@@ -38,7 +43,19 @@ public class Server {
     }
     
     public boolean isAvailable(){
-        return completionTime <= System.currentTimeMillis();
+        return completionTime < System.currentTimeMillis();
+    }
+
+    public boolean isAvailable(int i){
+
+        for(Long l : jobs.keySet()){
+            if(l < System.currentTimeMillis()){
+                coreCount += jobs.get(l).numCPUCores;
+                memory += jobs.get(l).memory;
+                jobs.remove(l);
+            }
+        }
+        return true;
     }
     
     // If RECS ALL used, available time == -1 if server is available immediately
@@ -46,10 +63,18 @@ public class Server {
     	return this.availableTime == -1;
     }
 
+    public boolean canRun(Job j){
+        return j.numCPUCores <= coreCount && j.memory <= memory && j.disk <= disk;
+    }
+
     public String scheduleJob(Job j) throws IOException {
+
         jobScheduler.sendMessage("SCHD " + j.jobID + " " + this.type + " " + this.id + " \n");
         String s = jobScheduler.recieveMessage();
-        this.completionTime = System.currentTimeMillis() + (j.estRunTime * 1000) + tolerance;
+        coreCount -= j.numCPUCores;
+        memory -= j.memory;
+        jobs.put(System.currentTimeMillis() + (j.estRunTime * 1000) + tolerance, j);
+        completionTime = System.currentTimeMillis() + (j.estRunTime * 1000);
         return s;
     }
 

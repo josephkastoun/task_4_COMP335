@@ -64,7 +64,6 @@ public class jobScheduler
 					//Add server type to List
 					if(!Servers.serverTypes.contains(s.type)){
 						Servers.serverTypes.add(s.type);
-						System.out.println(s.type);
 					}
 
 					//Add server object to List

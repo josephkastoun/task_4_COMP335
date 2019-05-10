@@ -11,6 +11,14 @@ public class Servers {
 	public Servers(ArrayList<Server> s){
 		this.servers = s;
 		serverTypes = new ArrayList<>();
+		serverTypes.add("tiny");
+		serverTypes.add("small");
+		serverTypes.add("medium");
+		serverTypes.add("large");
+		serverTypes.add("xlarge");
+		serverTypes.add("2xlarge");
+		serverTypes.add("3xlarge");
+		serverTypes.add("4xlarge");
 	}
 
 	private ArrayList<Server> servers;
@@ -23,7 +31,7 @@ public class Servers {
 		servers.add(s);
 	}
 
-	public ArrayList<String> serverTypes;
+	public ArrayList<String> serverTypes = new ArrayList<String>();
 
 
 	public Server bestFit(Job j){
@@ -34,12 +42,29 @@ public class Servers {
 		for(String sT : serverTypes){
 
 			for(Server server : getServersByType(sT)){
-				if(server.coreCount >= j.numCPUCores){
+				if(server.canRun(j) && server.isAvailable(0)){
 					int fitness = server.fitness(j);
-					if(fitness < bestFit && server.availableTime < minAvail){
+					if(fitness < bestFit || fitness == bestFit && server.availableTime < minAvail){
 						bestFit = fitness;
 						minAvail = server.availableTime;
 						bfServer = server;
+					}
+				}
+			}
+		}
+
+		if(bfServer != null){
+			return bfServer;
+		}else{
+			for(String sT : serverTypes){
+
+				for(Server server : getServersByType(sT)){
+					if(server.canRun(j)){
+						int fitness = server.fitness(j);
+						if(fitness < bestFit){
+							bestFit = fitness;
+							bfServer = server;
+						}
 					}
 				}
 			}
