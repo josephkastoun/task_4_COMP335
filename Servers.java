@@ -34,30 +34,12 @@ public class Servers {
 		for(String sT : serverTypes){
 
 			for(Server server : getServersByType(sT)){
-				if(server.coreCount >= j.numCPUCores && server.isAvailable()){
+				if(server.coreCount >= j.numCPUCores){
 					int fitness = server.fitness(j);
 					if(fitness < bestFit && server.availableTime < minAvail){
 						bestFit = fitness;
 						minAvail = server.availableTime;
 						bfServer = server;
-					}
-				}
-			}
-		}
-
-		if(bfServer != null){
-			return bfServer;
-		}else{
-			for(String sT : serverTypes){
-
-				for(Server server : getServersByType(sT)){
-					if(server.coreCount >= j.numCPUCores){
-						int fitness = server.fitness(j);
-						if(fitness < bestFit && server.availableTime < minAvail){
-							bestFit = fitness;
-							minAvail = server.availableTime;
-							bfServer = server;
-						}
 					}
 				}
 			}
