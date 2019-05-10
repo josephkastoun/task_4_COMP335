@@ -130,18 +130,24 @@ public class Servers {
 		ArrayList<Map.Entry<Server, Integer>> byType = countServersByType();
 		ArrayList<Server> s;
 
-		// loop through server types (smallest to largest)
 		for(int i = 0; i <byType.size(); i++) {
 			s = getServersByType(byType.get(i).getKey().type);
-			// Loop through amount of servers of each type.
 			for(int j =0; j<s.size(); j++) {
-				// if server has sufficient available resources to run job return the server
-				if(s.get(j).coreCount < job.numCPUCores)
+				if(s.get(j).fitness(job) >= 0 && s.get(j).isAvailable())
 					return s.get(j);
 			}
 		}
+		
 		// Return first active server with sufficient initial resource capacity to run job.
-		return null;
+		for(int i = 0; i <byType.size(); i++) {
+			s = getServersByType(byType.get(i).getKey().type);
+			for(int j =0; j<s.size(); j++) {
+				if(s.get(j).fitness(job) >= 0 && !(s.get(j).isAvailable())) {
+					return s.get(j);
+				}
+			}
+		}
+		return s.get(0);
 	}
 
 	public ArrayList<Map.Entry<Server, Integer>> countServersByType() {
