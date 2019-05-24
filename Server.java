@@ -1,15 +1,18 @@
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server {
 
 
     public String type;
     public int id, state, availableTime, coreCount, memory, disk;
+    public int flagCores, flagMemory, flagDisk;
     public long completionTime;
-    private final int tolerance = 200;
+    public final int tolerance = 200;
+    private boolean beingFlagged = false;
+    public ConcurrentLinkedQueue<serverFlag> jobs;
+
 
     public Server(String type,int id, int state, int availableTime, int coreCount, int memory, int disk){
         this.type = type;
@@ -19,9 +22,11 @@ public class Server {
         this.coreCount = coreCount;
         this.memory = memory;
         this.disk = disk;
+        flagCores = 0;
+        flagDisk = 0;
+        flagMemory = 0;
     }
 
-    public ConcurrentHashMap<Long, Job> jobs;
 
     public Server(String inputString){
         //Split the server object into individual elements
@@ -35,48 +40,44 @@ public class Server {
         this.coreCount = Integer.parseInt(subStrings[4]);
         this.memory = Integer.parseInt(subStrings[5]);
         this.disk = Integer.parseInt(subStrings[6]);
-        jobs = new ConcurrentHashMap<>();
+        jobs = new ConcurrentLinkedQueue<>();
     }
 
     public int fitness(Job j){
         return this.coreCount - j.numCPUCores;
+    }
+
+    public boolean isRunnableJob(Job j){
+        return coreCount >= j.numCPUCores && j.numCPUCores + flagCores <= this.coreCount && j.memory + flagMemory < this.memory && j.disk + flagDisk < this.disk;
     }
     
     public boolean isAvailable(){
         return completionTime < System.currentTimeMillis();
     }
 
-    public boolean isAvailable(int i){
-
-        for(Long l : jobs.keySet()){
-            if(l < System.currentTimeMillis()){
-                coreCount += jobs.get(l).numCPUCores;
-                memory += jobs.get(l).memory;
-                jobs.remove(l);
-            }
-        }
-        return true;
-    }
-    
-    // If RECS ALL used, available time == -1 if server is available immediately
-    public boolean isImmediatelyAvailable(){
-    	return this.availableTime == -1;
-    }
-
     public boolean canRun(Job j){
         return j.numCPUCores <= coreCount && j.memory <= memory && j.disk <= disk;
     }
 
-    public String scheduleJob(Job j) throws IOException {
+    public String scheduleJob(Job j, Servers ss) throws IOException {
+        //System.out.println(type + ": " + coreCount + " currentCores: " + (coreCount - flagCores) + " Job: " + j.numCPUCores);
+
+        if(!isRunnableJob(j)){
+            return "err";
+        }
 
         jobScheduler.sendMessage("SCHD " + j.jobID + " " + this.type + " " + this.id + " \n");
         String s = jobScheduler.recieveMessage();
-        coreCount -= j.numCPUCores;
-        memory -= j.memory;
-        jobs.put(System.currentTimeMillis() + (j.estRunTime * 1000) + tolerance, j);
+
+
+        jobs.add(new serverFlag(true, 0, j));
         completionTime = System.currentTimeMillis() + (j.estRunTime * 1000);
+
+
+        ss.iterateServerType(this.type);
         return s;
     }
+
 
     public int compareTo(Server other) {
         int c1 = this.coreCount;

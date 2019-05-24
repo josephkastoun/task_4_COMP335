@@ -1,9 +1,5 @@
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Servers {
 
@@ -11,14 +7,22 @@ public class Servers {
 	public Servers(ArrayList<Server> s){
 		this.servers = s;
 		serverTypes = new ArrayList<>();
-		serverTypes.add("tiny");
-		serverTypes.add("small");
-		serverTypes.add("medium");
-		serverTypes.add("large");
-		serverTypes.add("xlarge");
-		serverTypes.add("2xlarge");
-		serverTypes.add("3xlarge");
-		serverTypes.add("4xlarge");
+		currentIteration = new HashMap<>();
+	}
+
+	public HashMap<String, Integer> currentIteration;
+
+	public void iterateServerType(String type){
+		if(!currentIteration.containsKey(type)){
+			System.out.println("err: hashmap doesn't contain key " + type);
+			return;
+		}
+		int curr = currentIteration.get(type);
+		if(getServersByType(type).size() > curr+1){
+			currentIteration.replace(type, curr+1);
+		} else{
+			currentIteration.replace(type, 0);
+		}
 	}
 
 	private ArrayList<Server> servers;
@@ -29,10 +33,50 @@ public class Servers {
 
 	public void addServer(Server s){
 		servers.add(s);
+		//Add server type to List
+		if(!serverTypes.contains(s.type)){
+			serverTypes.add(s.type);
+			currentIteration.put(s.type, 0);
+		}
 	}
 
 	public ArrayList<String> serverTypes = new ArrayList<String>();
 
+	public void organise(){
+		servers.sort(new Comparator<Server>() {
+			@Override
+			public int compare(Server o1, Server o2) {
+				return o1.compareTo(o2);
+			}
+		});
+	}
+
+	public Server minCost(Job j){
+		int minCost = Integer.MAX_VALUE;
+		String s = null;
+		for(Server server : servers){
+			int fitness = server.fitness(j);
+			if(fitness >= 0 && fitness < minCost){
+				s = server.type;
+				minCost = fitness;
+			}
+		}
+		if(getServersByType(s).get(currentIteration.get(s)) != null)
+			return getServersByType(s).get(currentIteration.get(s));
+
+		return getServersByType(s).get(currentIteration.get(0));
+	}
+
+	public Server fasestExecution(Job j){
+        for (Server s : servers){
+        	if(s.coreCount < j.numCPUCores)
+        		continue;
+            if(s.fitness(j) > 0 && s.isRunnableJob(j)){
+                return s;
+            }
+        }
+		return minCost(j);
+	}
 
 	public Server bestFit(Job j){
 		int bestFit = Integer.MAX_VALUE;
@@ -172,7 +216,6 @@ public class Servers {
 		return serverBySize;
 	}
 
-
 	public void bubbleSort(ArrayList<Map.Entry<Server, Integer>> list) {
 		for(int i=0; i<list.size(); i++) {
 			for(int k=0; k<list.size()-1-i; k++) {
@@ -197,6 +240,17 @@ public class Servers {
 		return list;
 	}
 
+	public boolean toBeFlagged(Server s){
+		Iterator<serverFlag> iter = s.jobs.iterator();
+		while(iter.hasNext()){
+			serverFlag curr = iter.next();
+			if(curr.flag){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public Server getLargestServer() {
 
 		int curHighCoreCount = 0;
@@ -215,5 +269,11 @@ public class Servers {
 		}
 		//Add space to return string so the server can read it
 		return largestServer;
+	}
+
+	public void printAl(){
+		for(Server s : servers){
+			System.out.println(s.toString());
+		}
 	}
 }

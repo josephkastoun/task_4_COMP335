@@ -1,21 +1,20 @@
 import java.io.*;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 public class jobScheduler
 {
 
 	private static Socket socket;
-	private static ObjectOutputStream oos = null;
-	private static ObjectInputStream ois = null;
 	private static ArrayList<Job> jobs = null;
 	public static long startTime = 0;
 	public static Servers Servers;
+	private static Thread serverManagerThread;
+	private static serverManager serverManager;
 
 
-	public static void main(String args[])
-	{
+	public static void main(String args[]) throws IOException {
 		try
 		{
 			String host = "localhost";
@@ -61,15 +60,17 @@ public class jobScheduler
 					//Init server Object
 					Server s = new Server(r);
 
-					//Add server type to List
-					if(!Servers.serverTypes.contains(s.type)){
-						Servers.serverTypes.add(s.type);
-					}
-
 					//Add server object to List
 					Servers.addServer(s);
 				}
 			}
+
+			Servers.organise();
+			Servers.printAl();
+
+			serverManager = new serverManager();
+			serverManagerThread = new Thread(serverManager);
+			serverManagerThread.start();
 
 			while (true) {
 				//Send message to receive job info
@@ -77,7 +78,7 @@ public class jobScheduler
 				String r = recieveMessage();
 
 				//If server responds with NONE (i.e there are no more jobs) break
-				if(r.equals("NONE")) {
+				if(r == null || r.equals("NONE")) {
 					break;
 				}
 				
@@ -86,24 +87,35 @@ public class jobScheduler
 				jobs.add(j);
 
 				//Send a scheduling message to the server with the most recent jobID to the largest given server
-				if(args[0].equals("-a")){
-					switch (args[1]){
-						case "ff":
-							Servers.firstFit(j).scheduleJob(j);
-							break;
-						case "bf":
-							Servers.bestFit(j).scheduleJob(j);
-							break;
-						case "wf":
-							Servers.worstFit(j).scheduleJob(j);
-							break;
+				while (true) {
+					if (args.length > 0 && args[0].equals("-a")) {
+						if(args[1].equalsIgnoreCase("ff")) {
+							if (Servers.firstFit(j).scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+								continue;
+							}
+						}
+						if(args[1].equalsIgnoreCase("wf")) {
+							if (Servers.worstFit(j).scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+								continue;
+							}
+						}
+						if(args[1].equalsIgnoreCase("bf")) {
+							if (Servers.bestFit(j).scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+								continue;
+							}
+						}
 					}
-				}else{
-					Servers.getLargestServer().scheduleJob(j);
+					else {
+						if (Servers.fasestExecution(j).scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+							continue;
+						}
+					}
+					break;
 				}
 			}
 
-
+			serverManagerThread.interrupt();
+			serverManager.run = false;
 
 		}
 		catch (Exception exception)
@@ -115,6 +127,8 @@ public class jobScheduler
 			//Closing the socket
 			try
 			{
+				serverManagerThread.interrupt();
+				serverManager.run = false;
 				sendMessage("QUIT\n");
 				recieveMessage();
 				socket.close();
