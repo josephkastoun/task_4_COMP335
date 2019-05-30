@@ -8,10 +8,7 @@ public class Server {
     public String type;
     public int id, state, availableTime, coreCount, memory, disk;
     public int flagCores, flagMemory, flagDisk;
-    public long completionTime;
     public final int tolerance = 200;
-    private boolean beingFlagged = false;
-    public ConcurrentLinkedQueue<serverFlag> jobs;
 
 
     public Server(String type,int id, int state, int availableTime, int coreCount, int memory, int disk){
@@ -40,7 +37,6 @@ public class Server {
         this.coreCount = Integer.parseInt(subStrings[4]);
         this.memory = Integer.parseInt(subStrings[5]);
         this.disk = Integer.parseInt(subStrings[6]);
-        jobs = new ConcurrentLinkedQueue<>();
     }
 
     public int fitness(Job j){
@@ -50,10 +46,7 @@ public class Server {
     public boolean isRunnableJob(Job j){
         return coreCount >= j.numCPUCores && j.numCPUCores + flagCores <= this.coreCount && j.memory + flagMemory < this.memory && j.disk + flagDisk < this.disk;
     }
-    
-    public boolean isAvailable(){
-        return completionTime < System.currentTimeMillis();
-    }
+
 
     public boolean canRun(Job j){
         return j.numCPUCores <= coreCount && j.memory <= memory && j.disk <= disk;
@@ -62,19 +55,9 @@ public class Server {
     public String scheduleJob(Job j, Servers ss) throws IOException {
         //System.out.println(type + ": " + coreCount + " currentCores: " + (coreCount - flagCores) + " Job: " + j.numCPUCores);
 
-        if(!isRunnableJob(j)){
-            return "err";
-        }
-
         jobScheduler.sendMessage("SCHD " + j.jobID + " " + this.type + " " + this.id + " \n");
         String s = jobScheduler.recieveMessage();
 
-
-        jobs.add(new serverFlag(true, 0, j));
-        completionTime = System.currentTimeMillis() + (j.estRunTime * 1000);
-
-
-        ss.iterateServerType(this.type);
         return s;
     }
 

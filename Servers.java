@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.*;
 
 public class Servers {
@@ -7,22 +6,6 @@ public class Servers {
 	public Servers(ArrayList<Server> s){
 		this.servers = s;
 		serverTypes = new ArrayList<>();
-		currentIteration = new HashMap<>();
-	}
-
-	public HashMap<String, Integer> currentIteration;
-
-	public void iterateServerType(String type){
-		if(!currentIteration.containsKey(type)){
-			System.out.println("err: hashmap doesn't contain key " + type);
-			return;
-		}
-		int curr = currentIteration.get(type);
-		if(getServersByType(type).size() > curr+1){
-			currentIteration.replace(type, curr+1);
-		} else{
-			currentIteration.replace(type, 0);
-		}
 	}
 
 	private ArrayList<Server> servers;
@@ -36,7 +19,6 @@ public class Servers {
 		//Add server type to List
 		if(!serverTypes.contains(s.type)){
 			serverTypes.add(s.type);
-			currentIteration.put(s.type, 0);
 		}
 	}
 
@@ -53,6 +35,19 @@ public class Servers {
 
 	public Server minCost(Job j){
 		int minCost = Integer.MAX_VALUE;
+		Server s = null;
+		for(Server server : servers){
+			int fitness = server.fitness(j);
+			if(fitness >= 0 && fitness < minCost){
+				s = server;
+				minCost = fitness;
+			}
+		}
+		return s;
+	}
+
+	public Server maxUtilisation(Job j){
+		int minCost = Integer.MAX_VALUE;
 		String s = null;
 		for(Server server : servers){
 			int fitness = server.fitness(j);
@@ -61,21 +56,8 @@ public class Servers {
 				minCost = fitness;
 			}
 		}
-		if(getServersByType(s).get(currentIteration.get(s)) != null)
-			return getServersByType(s).get(currentIteration.get(s));
+		return getServersByType(s).get(0);
 
-		return getServersByType(s).get(currentIteration.get(0));
-	}
-
-	public Server fasestExecution(Job j){
-        for (Server s : servers){
-        	if(s.coreCount < j.numCPUCores)
-        		continue;
-            if(s.fitness(j) > 0 && s.isRunnableJob(j)){
-                return s;
-            }
-        }
-		return minCost(j);
 	}
 
 	public Server bestFit(Job j){
@@ -178,21 +160,10 @@ public class Servers {
 		for(int i = 0; i <byType.size(); i++) {
 			s = getServersByType(byType.get(i).getKey().type);
 			for(int j =0; j<s.size(); j++) {
-				if(s.get(j).fitness(job) >= 0 && s.get(j).isAvailable())
+				if(s.get(j).fitness(job) >= 0)
 					return s.get(j);
 			}
 		}
-		
-		// Return first active server with sufficient initial resource capacity to run job.
-		for(int i = 0; i <byType.size(); i++) {
-			s = getServersByType(byType.get(i).getKey().type);
-			for(int j =0; j<s.size(); j++) {
-				if(s.get(j).fitness(job) >= 0 && !(s.get(j).isAvailable())) {
-					return s.get(j);
-				}
-			}
-		}
-		// Update to return first active server.
 		return byType.get(0).getKey();
 	}
 
@@ -240,17 +211,6 @@ public class Servers {
 		return list;
 	}
 
-	public boolean toBeFlagged(Server s){
-		Iterator<serverFlag> iter = s.jobs.iterator();
-		while(iter.hasNext()){
-			serverFlag curr = iter.next();
-			if(curr.flag){
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public Server getLargestServer() {
 
 		int curHighCoreCount = 0;
@@ -271,9 +231,11 @@ public class Servers {
 		return largestServer;
 	}
 
-	public void printAl(){
+	public void printAll(){
+		System.out.println("## Server List ##");
 		for(Server s : servers){
 			System.out.println(s.toString());
 		}
+		System.out.println("##################");
 	}
 }

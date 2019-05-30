@@ -10,8 +10,6 @@ public class jobScheduler
 	private static ArrayList<Job> jobs = null;
 	public static long startTime = 0;
 	public static Servers Servers;
-	private static Thread serverManagerThread;
-	private static serverManager serverManager;
 
 
 	public static void main(String args[]) throws IOException {
@@ -66,11 +64,7 @@ public class jobScheduler
 			}
 
 			Servers.organise();
-			Servers.printAl();
-
-			serverManager = new serverManager();
-			serverManagerThread = new Thread(serverManager);
-			serverManagerThread.start();
+			Servers.printAll();
 
 			while (true) {
 				//Send message to receive job info
@@ -104,9 +98,28 @@ public class jobScheduler
 								continue;
 							}
 						}
+						if(args[1].equalsIgnoreCase("mc")) {
+							Servers serv = getAvailServers(j);
+							Server selectedServer = serv.minCost(j);
+							if(serv.getServers().size() == 0 || selectedServer == null){
+								selectedServer = Servers.minCost(j);
+								if(selectedServer == null) {
+									continue;
+								}
+							}
+							if (selectedServer.scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+								getAvailServers(j);
+								continue;
+							}
+						}
+						if(args[1].equalsIgnoreCase("mu")) {
+								if (Servers.maxUtilisation(j).scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+									continue;
+								}
+						}
 					}
 					else {
-						if (Servers.fasestExecution(j).scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+						if (Servers.getLargestServer().scheduleJob(j, Servers).equalsIgnoreCase("err")) {
 							continue;
 						}
 					}
@@ -114,8 +127,6 @@ public class jobScheduler
 				}
 			}
 
-			serverManagerThread.interrupt();
-			serverManager.run = false;
 
 		}
 		catch (Exception exception)
@@ -127,8 +138,6 @@ public class jobScheduler
 			//Closing the socket
 			try
 			{
-				serverManagerThread.interrupt();
-				serverManager.run = false;
 				sendMessage("QUIT\n");
 				recieveMessage();
 				socket.close();
@@ -138,6 +147,35 @@ public class jobScheduler
 				e.printStackTrace();
 			}
 		}
+	}
+
+	static Servers getAvailServers(Job j) throws IOException {
+		ArrayList<Server> s = new ArrayList<>();
+
+		sendMessage(String.format("RESC Avail %d %d %d\n", j.numCPUCores, j.memory, j.disk));
+		recieveMessage();
+		while (true) {
+			//Send the Message to collect servers
+			sendMessage("OK\n");
+			//Server is this string
+			String r = recieveMessage();
+
+			//No more servers, lets break
+			if(r.equals(".")){
+				break;
+			}
+
+			if(r.equalsIgnoreCase("data"))
+				continue;
+
+			//Init server Object
+			s.add(new Server(r));
+		}
+		Servers ss = new Servers(s);
+		//ss.printAll();
+
+		return new Servers(s);
+
 	}
 
 
@@ -165,6 +203,8 @@ public class jobScheduler
 		String message = br.readLine();
 		//Output to console
 		//System.out.println("Message received from the server : " +message);
+
+		//System.out.println("Message received from the server : "+message);
 
 		//Return the string for use within the program
 		return message;
