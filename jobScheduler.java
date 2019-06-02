@@ -8,11 +8,11 @@ public class jobScheduler
 
 	private static Socket socket;
 	private static ArrayList<Job> jobs = null;
-	public static long startTime = 0;
-	public static Servers Servers;
+	private static long startTime = 0;
+	private static Servers Servers;
 
 
-	public static void main(String args[]) throws IOException {
+	public static void main(String args[]) {
 		try
 		{
 			String host = "localhost";
@@ -37,7 +37,7 @@ public class jobScheduler
 				recieveMessage();
 				startTime = System.currentTimeMillis();
 
-				Servers = new Servers(new ArrayList<Server>());
+				Servers = new Servers(new ArrayList<>());
 
 			while (true) {
 				//Check if we've requested the servers before
@@ -80,51 +80,36 @@ public class jobScheduler
 				jobs.add(j);
 
 				//Send a scheduling message to the server with the most recent jobID to the largest given server
-				while (true) {
-					if (args.length > 0 && args[0].equals("-a")) {
-						if(args[1].equalsIgnoreCase("ff")) {
-							if (Servers.firstFit(j).scheduleJob(j).equalsIgnoreCase("err")) {
-								continue;
-							}
-						}
-						if(args[1].equalsIgnoreCase("wf")) {
-							if (Servers.worstFit(j).scheduleJob(j).equalsIgnoreCase("err")) {
-								continue;
-							}
-						}
-						if(args[1].equalsIgnoreCase("bf")) {
-							if (Servers.bestFit(j).scheduleJob(j).equalsIgnoreCase("err")) {
-								continue;
-							}
-						}
-						if(args[1].equalsIgnoreCase("mc")) {
-							Servers serv = getAvailServers(j);
-							Server minServer = Servers.minCost(j);
-							Server selectedServer = serv.minCost(j);
-							if(serv.getServers().size() == 0 || selectedServer == null|| !minServer.type.equalsIgnoreCase(selectedServer.type)){
-								if(selectedServer == null) {
-									minServer.scheduleJob(j);
-									break;
-								}
-							}
-							selectedServer.scheduleJob(j);
-						}
-						if(args[1].equalsIgnoreCase("mu")) {
-								if (Servers.maxUtilisation(j).scheduleJob(j).equalsIgnoreCase("err")) {
-									continue;
-								}
-						}
-					}
-					else {
-						if (Servers.getLargestServer().scheduleJob(j).equalsIgnoreCase("err")) {
-							continue;
-						}
-					}
-					break;
-				}
-			}
-
-
+                if (args.length > 0 && args[0].equals("-a")) {
+                    if(args[1].equalsIgnoreCase("ff")) {
+                        Servers.firstFit(j).scheduleJob(j);
+                    }
+                    if(args[1].equalsIgnoreCase("wf")) {
+                        Servers.worstFit(j).scheduleJob(j);
+                    }
+                    if(args[1].equalsIgnoreCase("bf")) {
+                        Servers.bestFit(j).scheduleJob(j);
+                    }
+                    if(args[1].equalsIgnoreCase("mc")) {
+                        Servers serv = getAvailServers(j);
+                        Server minServer = Servers.minCost(j);
+                        Server selectedServer = serv.minCost(j);
+                        if(serv.getServers().size() == 0 || selectedServer == null|| !minServer.type.equalsIgnoreCase(selectedServer.type)){
+                            if(selectedServer == null) {
+                                minServer.scheduleJob(j);
+                                break;
+                            }
+                        }
+                        selectedServer.scheduleJob(j);
+                    }
+                    if(args[1].equalsIgnoreCase("mu")) {
+                            Servers.maxUtilisation(j).scheduleJob(j);
+                    }
+                }
+                else {
+                    Servers.getLargestServer().scheduleJob(j);
+                }
+            }
 		}
 		catch (Exception exception)
 		{
@@ -207,7 +192,7 @@ public class jobScheduler
 		return message;
 	}
 
-	static void reqAll()  throws IOException{
+	private static void reqAll()  throws IOException{
 		sendMessage("RESC All\n");
 		recieveMessage();
 	}
