@@ -2,16 +2,16 @@ import java.util.*;
 
 public class Servers {
 
-
-	public Servers(ArrayList<Server> s){
-		this.servers = s;
-		serverTypes = new ArrayList<>();
-	}
-
+	public ArrayList<String> serverTypes = new ArrayList<String>();
 	private ArrayList<Server> servers;
 
 	public ArrayList<Server> getServers() {
 		return servers;
+	}
+
+	public Servers(ArrayList<Server> s){
+		this.servers = s;
+		serverTypes = new ArrayList<>();
 	}
 
 	public void addServer(Server s){
@@ -21,8 +21,6 @@ public class Servers {
 			serverTypes.add(s.type);
 		}
 	}
-
-	public ArrayList<String> serverTypes = new ArrayList<String>();
 
 	public void organise(){
 		servers.sort(new Comparator<Server>() {
@@ -57,7 +55,6 @@ public class Servers {
 			}
 		}
 		return getServersByType(s).get(0);
-
 	}
 
 	public Server bestFit(Job j){

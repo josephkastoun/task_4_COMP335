@@ -1,14 +1,10 @@
 import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server {
 
 
     public String type;
     public int id, state, availableTime, coreCount, memory, disk;
-    public int flagCores, flagMemory, flagDisk;
-    public final int tolerance = 200;
 
 
     public Server(String type,int id, int state, int availableTime, int coreCount, int memory, int disk){
@@ -19,11 +15,7 @@ public class Server {
         this.coreCount = coreCount;
         this.memory = memory;
         this.disk = disk;
-        flagCores = 0;
-        flagDisk = 0;
-        flagMemory = 0;
     }
-
 
     public Server(String inputString){
         //Split the server object into individual elements
@@ -43,16 +35,11 @@ public class Server {
         return this.coreCount - j.numCPUCores;
     }
 
-    public boolean isRunnableJob(Job j){
-        return coreCount >= j.numCPUCores && j.numCPUCores + flagCores <= this.coreCount && j.memory + flagMemory < this.memory && j.disk + flagDisk < this.disk;
-    }
-
-
     public boolean canRun(Job j){
         return j.numCPUCores <= coreCount && j.memory <= memory && j.disk <= disk;
     }
 
-    public String scheduleJob(Job j, Servers ss) throws IOException {
+    public String scheduleJob(Job j) throws IOException {
         //System.out.println(type + ": " + coreCount + " currentCores: " + (coreCount - flagCores) + " Job: " + j.numCPUCores);
 
         jobScheduler.sendMessage("SCHD " + j.jobID + " " + this.type + " " + this.id + " \n");
@@ -60,7 +47,6 @@ public class Server {
 
         return s;
     }
-
 
     public int compareTo(Server other) {
         int c1 = this.coreCount;

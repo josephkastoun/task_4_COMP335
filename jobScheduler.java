@@ -64,7 +64,6 @@ public class jobScheduler
 			}
 
 			Servers.organise();
-			Servers.printAll();
 
 			while (true) {
 				//Send message to receive job info
@@ -84,42 +83,40 @@ public class jobScheduler
 				while (true) {
 					if (args.length > 0 && args[0].equals("-a")) {
 						if(args[1].equalsIgnoreCase("ff")) {
-							if (Servers.firstFit(j).scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+							if (Servers.firstFit(j).scheduleJob(j).equalsIgnoreCase("err")) {
 								continue;
 							}
 						}
 						if(args[1].equalsIgnoreCase("wf")) {
-							if (Servers.worstFit(j).scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+							if (Servers.worstFit(j).scheduleJob(j).equalsIgnoreCase("err")) {
 								continue;
 							}
 						}
 						if(args[1].equalsIgnoreCase("bf")) {
-							if (Servers.bestFit(j).scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+							if (Servers.bestFit(j).scheduleJob(j).equalsIgnoreCase("err")) {
 								continue;
 							}
 						}
 						if(args[1].equalsIgnoreCase("mc")) {
 							Servers serv = getAvailServers(j);
+							Server minServer = Servers.minCost(j);
 							Server selectedServer = serv.minCost(j);
-							if(serv.getServers().size() == 0 || selectedServer == null){
-								selectedServer = Servers.minCost(j);
+							if(serv.getServers().size() == 0 || selectedServer == null|| !minServer.type.equalsIgnoreCase(selectedServer.type)){
 								if(selectedServer == null) {
-									continue;
+									minServer.scheduleJob(j);
+									break;
 								}
 							}
-							if (selectedServer.scheduleJob(j, Servers).equalsIgnoreCase("err")) {
-								getAvailServers(j);
-								continue;
-							}
+							selectedServer.scheduleJob(j);
 						}
 						if(args[1].equalsIgnoreCase("mu")) {
-								if (Servers.maxUtilisation(j).scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+								if (Servers.maxUtilisation(j).scheduleJob(j).equalsIgnoreCase("err")) {
 									continue;
 								}
 						}
 					}
 					else {
-						if (Servers.getLargestServer().scheduleJob(j, Servers).equalsIgnoreCase("err")) {
+						if (Servers.getLargestServer().scheduleJob(j).equalsIgnoreCase("err")) {
 							continue;
 						}
 					}

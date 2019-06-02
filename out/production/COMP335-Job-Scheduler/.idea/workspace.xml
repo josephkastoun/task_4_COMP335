@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9399c745-1114-4393-8d06-5cc54d5e3274" name="Default Changelist" comment="- Added concurrent thread for measuring task time.&#10;- Added flagging system for all server params&#10;- Added best server spread method&#10;- Added serverFlag class&#10;- Added serverManager class">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/COMP335_Job_Scheduler_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Servers.class" beforeDir="false" />
+    <list default="true" id="9399c745-1114-4393-8d06-5cc54d5e3274" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/Servers.java" beforeDir="false" afterPath="$PROJECT_DIR$/Servers.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jobScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/jobScheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/COMP335-Job-Scheduler/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/COMP335-Job-Scheduler/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/COMP335-Job-Scheduler/Servers.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/COMP335-Job-Scheduler/Servers.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serverFlag.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/serverManager.java" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -44,10 +39,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="447">
-              <caret line="59" selection-start-line="59" selection-end-line="59" />
+            <state relative-caret-position="714">
+              <caret line="42" column="41" selection-start-line="42" selection-start-column="41" selection-end-line="42" selection-end-column="41" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#1346#1347#0" expanded="true" />
+                <element signature="e#1399#1400#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -65,12 +62,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Servers.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-250">
-              <caret line="9" selection-start-line="9" selection-end-line="9" />
+            <state relative-caret-position="153">
+              <caret line="20" column="23" lean-forward="true" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
               <folding>
                 <element signature="method#organise#0;class#Servers#0" />
-                <element signature="e#1068#1069#0" expanded="true" />
-                <element signature="e#1102#1103#0" expanded="true" />
                 <element signature="method#bestFit#0;class#Servers#0" />
                 <element signature="method#worstFit#0;class#Servers#0" />
                 <element signature="method#firstFit#0;class#Servers#0" />
@@ -87,8 +82,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jobScheduler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
+            <state relative-caret-position="425">
+              <caret line="106" column="33" lean-forward="true" selection-start-line="106" selection-start-column="33" selection-end-line="106" selection-end-column="33" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -120,9 +115,9 @@
       <list>
         <option value="$PROJECT_DIR$/serverManager.java" />
         <option value="$PROJECT_DIR$/serverFlag.java" />
-        <option value="$PROJECT_DIR$/jobScheduler.java" />
-        <option value="$PROJECT_DIR$/Servers.java" />
         <option value="$PROJECT_DIR$/Server.java" />
+        <option value="$PROJECT_DIR$/Servers.java" />
+        <option value="$PROJECT_DIR$/jobScheduler.java" />
       </list>
     </option>
   </component>
@@ -132,25 +127,29 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-121" />
-    <option name="y" value="-21" />
-    <option name="width" value="2560" />
-    <option name="height" value="520" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="1273" />
+    <option name="width" value="1294" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="task_4_COMP335" type="b2602c69:ProjectViewProjectNode" />
               <item name="task_4_COMP335" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="task_4_COMP335" type="b2602c69:ProjectViewProjectNode" />
+              <item name="task_4_COMP335" type="462c0819:PsiDirectoryNode" />
+              <item name="out" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -198,7 +197,7 @@
     <configuration name="mc" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="jobScheduler" />
       <module name="COMP335-Job-Scheduler" />
-      <option name="PROGRAM_PARAMETERS" value="-a mc" />
+      <option name="PROGRAM_PARAMETERS" value="-a mu" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -239,7 +238,9 @@
       <workItem from="1558587064649" duration="6922000" />
       <workItem from="1558656015550" duration="9074000" />
       <workItem from="1559116259636" duration="7527000" />
-      <workItem from="1559200781733" duration="666000" />
+      <workItem from="1559200781733" duration="1156000" />
+      <workItem from="1559353184052" duration="470000" />
+      <workItem from="1559437439589" duration="467000" />
     </task>
     <task id="LOCAL-00001" summary="- Added concurrent thread for measuring task time.&#10;- Added flagging system for all server params&#10;- Added best server spread method&#10;- Added serverFlag class&#10;- Added serverManager class">
       <created>1558673985697</created>
@@ -248,33 +249,41 @@
       <option name="project" value="LOCAL" />
       <updated>1558673985697</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="- Removed concurrent thread for measuring task time.&#10;- Removed flagging system for all server params&#10;- Removed best server spread method&#10;- Removed serverFlag class&#10;- Removed serverManager class&#10;&#10;-- Server.java&#10;- Removed isAvailable&#10;- Removed flagging and iteration from schedule job&#10;&#10;-- Servers.java&#10;- Removed Iterate server by type&#10;- Removed fastestExecution()&#10;- Removed toBeFlagged()&#10;- Modified minCost to run with new server checking method&#10;- Added maxUtilisation method&#10;&#10;-- jobScheduler&#10;- Removed all thread code &#10;- Added new method to get available servers">
+      <created>1559201826107</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1559201826107</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="33276000" />
+    <option name="totallyTimeSpent" value="34703000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="2576" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Designer" order="0" />
       <window_info id="UI Designer" order="1" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Favorites" order="3" sideWeight="0.5021216" side_tool="true" weight="0.22366288" />
       <window_info id="Image Layers" order="4" />
-      <window_info active="true" content_ui="combo" id="Project" order="5" sideWeight="0.49787837" visible="true" weight="0.22416534" />
+      <window_info content_ui="combo" id="Project" order="5" sideWeight="0.49787837" visible="true" weight="0.22734499" />
       <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="1" />
+      <window_info anchor="bottom" id="Version Control" order="1" weight="0.11809318" />
       <window_info anchor="bottom" id="Terminal" order="2" weight="0.32936078" />
       <window_info anchor="bottom" id="Database Changes" order="3" />
       <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="5" />
       <window_info anchor="bottom" id="Find" order="6" weight="0.3261105" />
-      <window_info anchor="bottom" id="Run" order="7" weight="0.22647703" />
+      <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.22643554" />
       <window_info anchor="bottom" id="Debug" order="8" weight="0.39934355" />
       <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
-      <window_info anchor="bottom" id="Messages" order="10" weight="0.32932165" />
+      <window_info anchor="bottom" id="Messages" order="10" weight="0.32827735" />
       <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="12" />
       <window_info anchor="right" id="Theme Preview" order="0" />
@@ -291,16 +300,58 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list />
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="- Added concurrent thread for measuring task time.&#10;- Added flagging system for all server params&#10;- Added best server spread method&#10;- Added serverFlag class&#10;- Added serverManager class" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Added concurrent thread for measuring task time.&#10;- Added flagging system for all server params&#10;- Added best server spread method&#10;- Added serverFlag class&#10;- Added serverManager class" />
+    <MESSAGE value="- Removed concurrent thread for measuring task time.&#10;- Removed flagging system for all server params&#10;- Removed best server spread method&#10;- Removed serverFlag class&#10;- Removed serverManager class&#10;&#10;-- Server.java&#10;- Removed isAvailable&#10;- Removed flagging and iteration from schedule job&#10;&#10;-- Servers.java&#10;- Removed Iterate server by type&#10;- Removed fastestExecution()&#10;- Removed toBeFlagged()&#10;- Modified minCost to run with new server checking method&#10;- Added maxUtilisation method&#10;&#10;-- jobScheduler&#10;- Removed all thread code &#10;- Added new method to get availible servers" />
+    <MESSAGE value="- Removed concurrent thread for measuring task time.&#10;- Removed flagging system for all server params&#10;- Removed best server spread method&#10;- Removed serverFlag class&#10;- Removed serverManager class&#10;&#10;-- Server.java&#10;- Removed isAvailable&#10;- Removed flagging and iteration from schedule job&#10;&#10;-- Servers.java&#10;- Removed Iterate server by type&#10;- Removed fastestExecution()&#10;- Removed toBeFlagged()&#10;- Modified minCost to run with new server checking method&#10;- Added maxUtilisation method&#10;&#10;-- jobScheduler&#10;- Removed all thread code &#10;- Added new method to get available servers" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Removed concurrent thread for measuring task time.&#10;- Removed flagging system for all server params&#10;- Removed best server spread method&#10;- Removed serverFlag class&#10;- Removed serverManager class&#10;&#10;-- Server.java&#10;- Removed isAvailable&#10;- Removed flagging and iteration from schedule job&#10;&#10;-- Servers.java&#10;- Removed Iterate server by type&#10;- Removed fastestExecution()&#10;- Removed toBeFlagged()&#10;- Modified minCost to run with new server checking method&#10;- Added maxUtilisation method&#10;&#10;-- jobScheduler&#10;- Removed all thread code &#10;- Added new method to get available servers" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/Servers.java</url>
-          <line>170</line>
+          <line>177</line>
           <properties />
           <option name="timeStamp" value="2" />
         </line-breakpoint>
@@ -312,10 +363,12 @@
     <entry file="file://$PROJECT_DIR$/serverManager.java" />
     <entry file="file://$PROJECT_DIR$/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="447">
-          <caret line="59" selection-start-line="59" selection-end-line="59" />
+        <state relative-caret-position="714">
+          <caret line="42" column="41" selection-start-line="42" selection-start-column="41" selection-end-line="42" selection-end-column="41" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#1346#1347#0" expanded="true" />
+            <element signature="e#1399#1400#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -329,12 +382,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Servers.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-250">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        <state relative-caret-position="153">
+          <caret line="20" column="23" lean-forward="true" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
           <folding>
             <element signature="method#organise#0;class#Servers#0" />
-            <element signature="e#1068#1069#0" expanded="true" />
-            <element signature="e#1102#1103#0" expanded="true" />
             <element signature="method#bestFit#0;class#Servers#0" />
             <element signature="method#worstFit#0;class#Servers#0" />
             <element signature="method#firstFit#0;class#Servers#0" />
@@ -349,8 +400,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jobScheduler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="425">
+          <caret line="106" column="33" lean-forward="true" selection-start-line="106" selection-start-column="33" selection-end-line="106" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -363,6 +414,7 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
+          <last-edited>COMP335-Job-Scheduler:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -407,6 +459,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
+          <last-edited>COMP335-Job-Scheduler</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
